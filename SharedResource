@@ -1,0 +1,61 @@
+
+public class SharedResource {
+	public int value = 0; //the actual shared information
+	
+	public int numbReading = 0; //amount of readers using the shared resource
+	
+	public SharedResource() { 
+		this.numbReading = 0; //zero readers in the beginning
+	}
+	 
+	public void editData() {
+		synchronized(this){   //need the key - one writer using this at once 
+			System.out.println("Writer is editing...");
+			this.value++; //every time the writer edits the resource, he changes value by 1 
+			try {
+				Thread.sleep(10000); //waits ten seconds
+				System.out.println("Writer is done writing");
+				System.out.println("value changed to " + this.value);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} 
+		}
+	}
+	
+	public void readData() {
+		synchronized(this) {
+			this.numbReading++; //another reader is using the resource
+			System.out.println(this.numbReading + " readers using resource");
+		}
+		
+		try {
+			System.out.println("reading...");
+			System.out.println("value is " + this.value);
+			Thread.sleep(2000); //the reader takes 2 seconds to read
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		synchronized(this) {
+			this.numbReading--;
+			System.out.println("a reader is done reading");
+			System.out.println(this.numbReading + " readers using resource");
+			if(this.numbReading == 0) { //if they were the last reader
+				this.notify(); // releases them one at a time from the pool - either a writer or reader  **why does it seem to always release the writer
+			}
+			try {
+				super.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			 
+		}
+	}
+	
+	 
+	public int getData() { //returns the amount of readers using the resource 
+		synchronized(this) {	 
+			return this.numbReading;
+		}
+	}
+}
