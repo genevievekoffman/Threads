@@ -1,0 +1,14 @@
+public class Reader extends Thread {
+	private SharedResource sharedResource;   
+	 
+	public Reader(SharedResource sharedResource) {
+		this.sharedResource = sharedResource; 
+	}
+	
+	@Override
+	public void run() {
+		 while(true) {  
+			 this.sharedResource.readData();
+		 } 	
+	}
+}
