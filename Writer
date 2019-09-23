@@ -1,0 +1,29 @@
+public class Writer extends Thread {
+	SharedResource sharedResource; //what does this do? 
+	
+	public Writer(SharedResource sharedResource) {   //why do we need this if we already created it above
+		this.sharedResource = sharedResource; 
+	}
+	
+	@Override
+	public void run() {
+		while(true) {
+			if (this.sharedResource.getData() == 0) { //no readers are reading
+				synchronized(this.sharedResource) {
+					System.out.println("No readers");
+					this.sharedResource.editData();
+					//System.out.println("value changed to " + );
+					this.sharedResource.notifyAll(); //releases all the readers
+					 
+					try {
+						this.sharedResource.wait();
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+	
+}
