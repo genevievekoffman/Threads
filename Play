@@ -1,0 +1,49 @@
+
+public class Play {
+	public static void main(String[]args) {
+		SharedResource book = new SharedResource();
+		
+		Writer writer = new Writer(book);
+		
+		Reader reader1 = new Reader(book);
+		Reader reader2 = new Reader(book);
+		Reader reader3 = new Reader(book);
+		Reader reader4 = new Reader(book);
+		Reader reader5 = new Reader(book);
+		Reader reader6 = new Reader(book);
+		Reader reader7 = new Reader(book);
+		Reader reader8 = new Reader(book);
+		Reader reader9 = new Reader(book);
+		Reader reader10 = new Reader(book);
+
+		 
+		writer.start();
+		reader1.start();
+		reader2.start();
+		reader3.start();
+		reader4.start();
+		reader5.start();
+		reader6.start();
+		reader7.start();
+		reader8.start();
+		reader9.start();
+		reader10.start();
+		
+		try {
+			writer.join();
+			reader1.join();
+			reader2.join();
+			reader3.join();
+			reader4.join();
+			reader5.join();
+			reader6.join();
+			reader7.join();
+			reader8.join();
+			reader9.join();
+			reader10.join();
+		} catch (InterruptedException e) {
+			 
+			e.printStackTrace();
+		}
+	}
+}
