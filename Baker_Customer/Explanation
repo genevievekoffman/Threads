@@ -1,0 +1,4 @@
+Classic Baker/Consumer problem 
+- a baker (thread) bakes cakes and serves them when they are done
+- a consumer (threads) orders a single cake
+-FIFO: first in first out 
