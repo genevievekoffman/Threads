@@ -1,0 +1,29 @@
+
+public class Baker extends Thread {
+	SharedQ sharedQ;
+	
+	public Baker(SharedQ sharedQ) {
+		this.sharedQ = sharedQ; 
+	}
+	
+	@Override
+	public void run() {
+		while(this.sharedQ.getCakesBaked() >= 0) {
+			System.out.println("Baker is baking a cake...");
+			try {
+				Thread.sleep(2000); //sleeps for two seconds and then the cake is done baking
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			this.sharedQ.bakeCake();
+			this.sharedQ.serveCake();
+			boolean done = this.sharedQ.checkIfDone();
+			if (done == true) {
+				System.out.println("Baker is done for the day :)");
+				break;
+			}
+		 }
+	}
+	
+	
+}
