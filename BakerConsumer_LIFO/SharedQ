@@ -1,0 +1,86 @@
+
+public class SharedQ {
+	public int cakesBaked;
+	public int numCustomer; //total amount of customers who have been here (gives id's to customers) 
+	public int serving; //which # cake is being served
+	public int currAmnt; // current amount of customers
+	
+	public SharedQ() {
+		this.cakesBaked = 0;
+		this.numCustomer = 0;
+		this.serving = 0;
+		this.currAmnt = 0;
+	}
+	
+	public int getNumcurrAmnt() {
+		synchronized(this) {
+			return this.currAmnt;
+		}
+	}
+	public int getNumCustom() {  
+		synchronized(this) {
+			return this.numCustomer;
+		}
+	}
+	
+	public int getCakesBaked() { //returns the amount of cakes baked
+		synchronized(this) {
+			return this.cakesBaked;
+		}
+	}
+	
+	public void increase(int id) { //another customer has entered with this id
+		synchronized(this) {
+			System.out.println("customer_" + id + " has ordered a cake");
+			this.numCustomer ++; 
+			this.currAmnt ++; 
+		}
+	}
+	
+	public void bakeCake() {
+		synchronized(this) {
+			this.cakesBaked ++; //another cake has baked
+			System.out.println("A cake is done!");
+		}
+	}
+	
+	public void serveCake() {
+		synchronized(this) {
+				this.notify(); //releases a costumer
+			}
+		}
+	
+	
+	public void waitForCake(int id) { //needs the customers id
+		synchronized(this) {
+			System.out.println("customer_" + id + " waiting ...");
+			boolean stop = true;
+			while(stop) {
+				try {
+					this.wait(); //put into the wait section
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				 
+				 
+				if (this.cakesBaked > 0 && this.currAmnt == id+1) { //numCustomer for LIFO; serving for FIFO
+					System.out.println("customer_" + id + " has been served their cake");
+					this.cakesBaked --; //one cake is served
+					this.serving ++; //another cake has been served
+					this.currAmnt --;
+					stop = false; //they can leave the while loop
+				}
+			}
+		}
+	}
+	
+ 
+	public boolean checkIfDone() { //returns true if baker can stop
+		if (this.currAmnt == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+}
